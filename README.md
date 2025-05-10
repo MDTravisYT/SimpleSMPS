@@ -1,4 +1,4 @@
-# SimpleSMPS (WIP)
+# SimpleSMPS
 A simple SMPS player running off of official source code.
 
 Example files are taken from the [official source code](https://hiddenpalace.org/News/Sega_of_Japan_Sound_Documents_and_Source_Code).
