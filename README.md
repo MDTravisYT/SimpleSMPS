@@ -1,7 +1,7 @@
 # SimpleSMPS
-A simple SMPS player running off of official source code.
+A simple SMPS player running off of [official source code](https://hiddenpalace.org/News/Sega_of_Japan_Sound_Documents_and_Source_Code).
 
-Example files are taken from the [official source code](https://hiddenpalace.org/News/Sega_of_Japan_Sound_Documents_and_Source_Code).
+The 68000 program conversions are borrowed from [superctr's branch of the source](https://github.com/superctr/SMPS/tree/master).
 
 Go to [the wiki page](https://github.com/MDTravisYT/SimpleSMPS/wiki) to learn how to use SMPS and this player.
 
