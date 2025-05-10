@@ -1,8 +1,11 @@
 INITJOYPADS:
+		z80bus_on
+		z80bus_wait
 		MOVEQ	#$40,	D0
 		MOVE.B	D0,	(IOCTRL1+1).L
 		MOVE.B	D0,	(IO_CT2_CTRL+1).L
 		MOVE.B	D0,	(IOCTRL3+1).L
+		z80bus_off
 		RTS
 
 READJOYPADS:

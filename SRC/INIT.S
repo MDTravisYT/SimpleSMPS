@@ -33,6 +33,22 @@ init:
 	InitTXT	ASCIITXT6,  1, 18
 	InitTXT	ASCIITXT7,  1, 26
 	
+;	init sound
+	z80reset_off
+	z80bus_on
+	z80reset_on
+	lea		pcm_top,a0
+	lea		Z80RAM,	a1
+	move.w	#(pcm_end-pcm_top)-1,	d0
+.loadSound
+	move.b	(a0)+,	(a1)+
+	dbf		d0,		.loadSound
+	z80reset_off
+	move.w	#$20,	d0
+.stall
+	dbf		d0,		.stall
+	z80reset_on
+	z80bus_off
 	jsr		INITJOYPADS	;	init controller
 	move	#$2300,sr
 	

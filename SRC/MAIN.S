@@ -3,6 +3,9 @@
 	include		"src/system/vectors.s"
 	include		"src/system/error.s"
 	include		"src/system/interrupt.s"
+	include		"sound/src/tb.lib"
+	include		"sound/src/eq.lib"
+	include		"sound/src/mcr.lib"
 	
 	include		"src/init.s"
 	
@@ -39,7 +42,7 @@
 	bsr.w	DispHex
 	bra.s	.loop
 .playSnd
-	;	insert sound code here
+	move.b	HEXADDR,sound_ram+buf1
 	bra.w	.loop
 	
 	DefTXT	ASCIITXT1,	'SEGA SOUND SOURCE SOUND PLAYER'
@@ -60,3 +63,6 @@ ascii:	incbin	"art/ascii.art"
 	ascii_end:
 hex:	incbin	"art/hex.art"
 	hex_end:
+
+	align		$1000
+	include		"sound/sound.s"
