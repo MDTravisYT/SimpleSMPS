@@ -31,7 +31,8 @@ init:
 	InitTXT	ASCIITXT4,  1, 16
 	InitTXT	ASCIITXT5,  1, 17
 	InitTXT	ASCIITXT6,  1, 18
-	InitTXT	ASCIITXT7,  1, 26
+	InitTXT	ASCIITXT7,  1, 19
+	InitTXT	ASCIITXT8,  1, 26
 	
 ;	init sound
 	z80reset_off
