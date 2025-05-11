@@ -362,7 +362,7 @@ vol_flg_tbl:							; ｷｬﾘｱ / ﾓｼﾞｭﾚｰﾀ ﾉ ﾃﾞｰﾀ
 ;		public	vol_set
 vol_set:
 		btst.b	#_wr,(a5)				; if write protect on then jump(s.e use)
-		bne.s	.end
+		bne.w	.end
 		moveq	#0,d0
 		move.b	enve(a5),d0				; voice no.
 .vol_s:

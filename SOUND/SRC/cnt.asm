@@ -173,12 +173,9 @@ rythm_set:
 		move.b	freqb(a5),d0			; data restore
 		cmpi.b	#$80,d0					; if data = 'NL'
 		beq.s	rythm_end				; then not store
-		btst	#3,d0					; if data = 88h-8fh
-		bne.s	rythm_tom_set			; then tom set
-		jsr		z80opn_chk(pc)			; z80 bus req on
-		tst.b	z80use_flg				; if z80 voice using
-		bne.s	.pass					; then not store
-		move.b	d0,z80kyflag			; rythm req no. set
+        MPCM_stopZ80                                    ; ++
+        move.b  d0, MPCM_Z80_RAM+Z_MPCM_CommandInput    ; ++ send DAC sample to Mega PCM
+        MPCM_startZ80        
 .pass:
 		z80bus_off						; z80 bus req off
 rythm_end:
@@ -1535,47 +1532,55 @@ opn1_wrt_chk:
 		jsr		opn1_wrt(pc)			; opn direct write
 		z80bus_off						; bus req off
 		rts
-;=======================================;
-;										;
-;			   OPN WRITE				;
-;										;
-;=======================================;
-;		input	d0 = FM reg addr.
-;				d1 = FM write data.
-;				a5 = ram top
-;		public	opn_wrt,opn1_wrt,opn2_wrt
+
+; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
+
 opn_wrt:
-;----------< OPN 1 or 2 scan >----------;
-		btst.b	#2,chian(a5)
-		bne.s	opn2_wrt0
-		add.b	chian(a5),d0			; d0 = FM registor
-;------------< OPN 1 write >------------;
+                move.b  1(a5), d2
+                subq.b  #4, d2                          ; Is this bound for part I or II?
+                bcc.s   loc_7275A                       ; If part II, branch
+                addq.b  #4, d2                          ; Add in voice control bits
+                add.b   d2, d0                          ;
+
+; ---------------------------------------------------------------------------
 opn1_wrt:
-		lea		opn_status,a0
-.loop1:
-		btst.b	#7,(a0)					; opn status busy bit
-		bne.s	.loop1
-		move.b	d0,(a0)					; FM registor set
-.loop2:
-		btst.b	#7,(a0)					; opn status busy bit
-		bne.s	.loop2
-		move.b	d1,1(a0)				; FM data set
-		rts
-;------------< OPN 2 write >------------;
-opn2_wrt0:								;
-		move.b	chian(a5),d2			; d2 = channel data
-		bclr	#2,d2					; 
-		add.b	d2,d0					; FM registor
+                MPCM_stopZ80
+                MPCM_ensureYMWriteReady
+.waitLoop:      tst.b   ($A04000).l             ; is FM busy?
+                bmi.s   .waitLoop               ; branch if yes
+                move.b  d0, ($A04000).l
+                nop
+                move.b  d1, ($A04001).l
+                nop
+                nop
+.waitLoop2:     tst.b   ($A04000).l             ; is FM busy?
+                bmi.s   .waitLoop2              ; branch if yes
+                move.b  #$2A, ($A04000).l       ; restore DAC output for Mega PCM
+                MPCM_startZ80
+                rts
+; End of function sub_7272E
+
+; ===========================================================================
+loc_7275A:
+                add.b   d2,d0                   ; Add in to destination register
+
+; ---------------------------------------------------------------------------
 opn2_wrt:
-		lea		opn_status,a0
-.loop1:
-		btst.b	#7,(a0)					; opn status busy bit
-		bne.s	.loop1
-		move.b	d0,2(a0)				; FM registor set
-.loop2:
-		btst.b	#7,(a0)					; opn status busy bit
-		bne.s	.loop2
-		move.b	d1,3(a0)				; FM data set
+                MPCM_stopZ80
+                MPCM_ensureYMWriteReady
+.waitLoop:      tst.b   ($A04000).l             ; is FM busy?
+                bmi.s   .waitLoop               ; branch if yes
+                move.b  d0, ($A04002).l
+                nop
+                move.b  d1, ($A04003).l
+                nop
+                nop
+.waitLoop2:     tst.b   ($A04000).l             ; is FM busy?
+                bmi.s   .waitLoop2              ; branch if yes
+                move.b  #$2A, ($A04000).l       ; restore DAC output for Mega PCM
+                MPCM_startZ80
+                rts
+; End of function sub_72764
 		rts
 
 ;=======================================;
@@ -1586,21 +1591,21 @@ opn2_wrt:
 ;		if z80 writing z80_flg = 80h
 ;		public	z80opn_chk
 z80opn_chk:
-		z80bus_on
-.loop1:
-		btst.b	#0,z80busreq			; if bit on then bus req ok.
-		bne.s	.loop1
-		btst.b	#7,z80_flg				; pcm write flag
-		beq.s	z80_chk_end
-		z80bus_off
-		nop
-		nop
-		nop
-		nop
-		nop
-		bra.s	z80opn_chk
-
-z80_chk_end:
+;		z80bus_on
+;.loop1:
+;		btst.b	#0,z80busreq			; if bit on then bus req ok.
+;		bne.s	.loop1
+;		btst.b	#7,z80_flg				; pcm write flag
+;		beq.s	z80_chk_end
+;		z80bus_off
+;		nop
+;		nop
+;		nop
+;		nop
+;		nop
+;		bra.s	z80opn_chk
+;
+;z80_chk_end:
 		rts
 ;=======================================;
 ;										;

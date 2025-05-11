@@ -28,7 +28,7 @@ JDW		macro	addr
 ;=======================================;
 ;	aka stopZ80
 z80bus_on		macro
-		move.w	#$100,z80busreq
+	;	move.w	#$100,z80busreq
 		endm
 
 ;=======================================;
@@ -36,7 +36,7 @@ z80bus_on		macro
 ;=======================================;
 ;	aka startz80
 z80bus_off		macro
-		move.w	#$000,z80busreq
+	;	move.w	#$000,z80busreq
 		endm
 
 ;=======================================;
@@ -44,8 +44,8 @@ z80bus_off		macro
 ;=======================================;
 ;	aka waitZ80
 z80bus_wait		macro
-.wait	btst	#0,z80busreq
-		bne.s	.wait
+;.wait	btst	#0,z80busreq
+;		bne.s	.wait
 		endm
 
 ;=======================================;
@@ -53,7 +53,7 @@ z80bus_wait		macro
 ;=======================================;
 ;	aka resetZ80
 z80reset_on		macro
-		move.w	#$100,z80reset
+;		move.w	#$100,z80reset
 		endm
 
 ;=======================================;
@@ -61,7 +61,7 @@ z80reset_on		macro
 ;=======================================;
 ;	aka resetZ80a
 z80reset_off	macro
-		move.w	#$000,z80reset
+;		move.w	#$000,z80reset
 		endm
 
 ;=======================================;
