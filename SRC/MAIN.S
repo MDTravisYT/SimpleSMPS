@@ -70,5 +70,4 @@ ascii:	incbin	"art/ascii.art"
 hex:	incbin	"art/hex.art"
 	hex_end:
 
-	align		$1000
 	include		"sound/sound.s"
