@@ -1591,21 +1591,8 @@ opn2_wrt:
 ;		if z80 writing z80_flg = 80h
 ;		public	z80opn_chk
 z80opn_chk:
-;		z80bus_on
-;.loop1:
-;		btst.b	#0,z80busreq			; if bit on then bus req ok.
-;		bne.s	.loop1
-;		btst.b	#7,z80_flg				; pcm write flag
-;		beq.s	z80_chk_end
-;		z80bus_off
-;		nop
-;		nop
-;		nop
-;		nop
-;		nop
-;		bra.s	z80opn_chk
-;
-;z80_chk_end:
+		MPCM_stopZ80
+		MPCM_ensureYMWriteReady
 		rts
 ;=======================================;
 ;										;
