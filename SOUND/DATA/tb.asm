@@ -59,8 +59,8 @@ adrtb:
 ;										;
 ;=======================================;
 
-		include "MegaPCM.asm"    
-		include "SampleTable.asm"
+		include "SOUND/MegaPCM.asm"    
+		include "SOUND/SampleTable.asm"
 		
 ;=======================================;
 ;										;
